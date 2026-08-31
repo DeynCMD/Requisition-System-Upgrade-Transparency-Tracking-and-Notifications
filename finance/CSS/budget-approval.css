@@ -1,0 +1,374 @@
+/* finance-budget-approvals.css - Dark Modern Theme with Premium Buttons */
+
+:root {
+  --bg-dark: #1e1e2e;
+  --sidebar: #2d2d44;
+  --card-bg: #2a2a3a;
+  --text-light: #e0e0ff;
+  --green: #4ade80;
+  --green-dark: #3ab874;
+  --red: #f87171;
+  --purple: #a78bfa;
+  --border: #444;
+  --hover-bg: rgba(74, 222, 128, 0.12);
+  --shadow: 0 10px 35px rgba(0, 0, 0, 0.45);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+body {
+  background: var(--bg-dark);
+  color: var(--text-light);
+  min-height: 100vh;
+}
+
+.container {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  padding: 40px 32px;
+}
+
+.page-header {
+  margin-bottom: 32px;
+}
+
+.page-header h1 {
+  color: var(--green);
+  font-size: 2.3rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+/* Table Card */
+.table-card {
+  background: var(--card-bg);
+  border-radius: 20px;
+  padding: 28px;
+  box-shadow: var(--shadow);
+  overflow-x: auto;
+  position: relative;
+}
+
+.table-header-info {
+  position: absolute;
+  top: 28px;
+  right: 28px;
+  color: #888;
+  font-size: 0.95rem;
+  background: var(--hover-bg);
+  padding: 6px 14px;
+  border-radius: 30px;
+}
+
+.table-header-info span {
+  color: var(--green);
+  font-weight: bold;
+}
+
+.approval-table {
+  width: 100%;
+  min-width: 900px;
+  border-collapse: collapse;
+}
+
+.approval-table th {
+  text-align: left;
+  padding: 16px 14px;
+  color: var(--green);
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-bottom: 2px solid var(--border);
+  background: rgba(74, 222, 128, 0.05);
+}
+
+.approval-table td {
+  padding: 20px 14px;
+  border-bottom: 1px solid var(--border);
+  color: #ddd;
+  vertical-align: middle;
+}
+
+.approval-table tr:hover {
+  background: var(--hover-bg);
+  transition: background 0.2s;
+}
+
+/* Premium Action Buttons */
+.actions {
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.view-btn,
+.approve-btn,
+.reject-btn {
+  padding: 10px 22px;
+  border: none;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  letter-spacing: 0.3px;
+}
+
+.view-btn {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+}
+
+.view-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(59, 130, 246, 0.5);
+}
+
+.approve-btn {
+  background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+  color: white;
+}
+
+.approve-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(74, 222, 128, 0.5);
+  background: linear-gradient(135deg, var(--green-dark) 0%, var(--green) 100%);
+}
+
+.reject-btn {
+  background: linear-gradient(135deg, var(--red) 0%, #ef4444 100%);
+  color: white;
+}
+
+.reject-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(248, 113, 113, 0.5);
+  background: linear-gradient(135deg, #ef4444 0%, var(--red) 100%);
+}
+
+/* Ripple effect on click */
+.view-btn:active::after,
+.approve-btn:active::after,
+.reject-btn:active::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: all 0.6s;
+}
+
+.view-btn:active::after,
+.approve-btn:active::after,
+.reject-btn:active::after {
+  width: 200px;
+  height: 200px;
+  opacity: 1;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 100px 40px;
+  color: #777;
+}
+
+.empty-state i {
+  color: var(--green);
+  margin-bottom: 24px;
+  font-size: 4rem;
+  opacity: 0.7;
+}
+
+.empty-state h3 {
+  font-size: 1.5rem;
+  margin-bottom: 12px;
+  color: var(--text-light);
+}
+
+.empty-state p {
+  font-size: 1.1rem;
+  opacity: 0.8;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .container {
+    flex-direction: column;
+  }
+  .sidebar {
+    width: 100%;
+    padding: 24px 20px;
+  }
+  .main-content {
+    padding: 32px 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-header h1 {
+    font-size: 2rem;
+  }
+
+  .approval-table,
+  .approval-table thead,
+  .approval-table tbody,
+  .approval-table th,
+  .approval-table td,
+  .approval-table tr {
+    display: block;
+  }
+
+  .approval-table thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+
+  .approval-table tr {
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--card-bg);
+  }
+
+  .approval-table td {
+    border: none;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    padding-left: 50%;
+  }
+
+  .approval-table td:before {
+    position: absolute;
+    top: 20px;
+    left: 14px;
+    width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
+    font-weight: bold;
+    color: var(--green);
+  }
+
+  .approval-table td:nth-of-type(1):before {
+    content: "PR #";
+  }
+  .approval-table td:nth-of-type(2):before {
+    content: "Department";
+  }
+  .approval-table td:nth-of-type(3):before {
+    content: "Amount";
+  }
+  .approval-table td:nth-of-type(4):before {
+    content: "Purpose";
+  }
+  .approval-table td:nth-of-type(5):before {
+    content: "Actions";
+  }
+
+  .actions {
+    padding-left: 14px !important;
+    text-align: left !important;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}
+/* View PO Modal Styles */
+#viewPoModal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  display: none;
+}
+
+#viewPoModal .modal-content {
+  background: var(--card-bg);
+  border-radius: 16px;
+  width: 90%;
+  max-width: 1100px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 32px;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  color: var(--text-light);
+}
+
+#viewPoModal h2 {
+  color: var(--green);
+  margin-bottom: 24px;
+  font-size: 1.8rem;
+}
+
+#viewPoModal .modal-close {
+  position: absolute;
+  top: 16px;
+  right: 24px;
+  font-size: 2.2rem;
+  color: #777;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+#viewPoModal .modal-close:hover {
+  color: white;
+}
+
+/* Your detail grid styles from get_request_detail.php */
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
+.detail-grid h3,
+.detail-grid h4 {
+  color: var(--green);
+  margin-bottom: 12px;
+}
+
+.detail-grid p {
+  margin: 8px 0;
+  line-height: 1.5;
+}
+
+.detail-grid strong {
+  color: #ccc;
+}
+
+.detail-grid .total-value {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 2px solid var(--green);
+}
+
+.detail-grid .total-value p {
+  font-size: 1.1em;
+}
+
+.detail-grid .total-value span {
+  color: var(--green);
+  font-weight: bold;
+  font-size: 1.2em;
+}

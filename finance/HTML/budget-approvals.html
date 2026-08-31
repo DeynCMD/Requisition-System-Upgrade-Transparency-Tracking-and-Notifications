@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Budget Approvals — Procurement System</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../CSS/theme.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="../CSS/budget-approval.css" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Sidebar (unchanged) -->
+      <aside class="sidebar">
+        <div class="profile">
+          <div class="avatar-wrapper">
+            <img src="../Assets/Avatar.jpg" alt="Profile" class="avatar" />
+          </div>
+          <span class="role">FINANCE</span>
+        </div>
+
+        <nav class="nav-menu">
+        <ul>
+          <li>
+            <a href="finance-dashboard.php"><i class="fas fa-dollar-sign"></i> Finance</a>
+          </li>
+          <li>
+            <a href="budget-approvals.html" class="active"><i class="fas fa-check-double"></i> Budget Approvals</a>
+          </li>
+          <li>
+            <a href="finance-budget.php"><i class="fas fa-wallet"></i> Budget</a>
+          </li>
+          <li>
+            <a href="withdrawals.php"><i class="fas fa-rotate-left"></i> Withdrawals</a>
+          </li>
+          <li>
+            <a href="history.html"><i class="fas fa-history"></i> History</a>
+          </li>
+        </ul>
+      </nav>
+
+        <a href="../../Admin/PHP/logout.php" class="logout-btn">LOGOUT</a>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <header class="page-header">
+          <h1>Budget Approvals</h1>
+          <div class="header-info">
+            <span class="status-badge">Approved by Approver</span>
+          </div>
+        </header>
+
+        <div class="table-card">
+          <table class="approval-table">
+            <thead>
+              <tr>
+                <th>PR #</th>
+                <th>Department</th>
+                <th>Amount</th>
+                <th>Purpose</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="approval-table-body"></tbody>
+          </table>
+
+          <div class="empty-state" id="empty-state" style="display: none">
+            <i class="fas fa-inbox fa-3x"></i>
+            <h3>No pending approvals</h3>
+            <p>
+              All approved requests have been processed or there are no new
+              requests yet.
+            </p>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- View PO Modal -->
+    <div class="modal" id="viewPoModal" style="display: none">
+      <div class="modal-content">
+        <span class="modal-close" id="closeViewModal">×</span>
+        <h2>Purchase Order Details</h2>
+        <div id="poModalContent">
+          <!-- Content from get_request_detail.php will be loaded here -->
+        </div>
+      </div>
+    </div>
+
+    <script src="../JS/finance-budget-approvals.js"></script>
+  </body>
+</html>

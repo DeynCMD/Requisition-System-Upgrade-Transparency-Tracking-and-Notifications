@@ -1,0 +1,81 @@
+[05-Mar-2026 16:19:08 Europe/Berlin] === NEW REQUEST ===
+[05-Mar-2026 16:19:08 Europe/Berlin] Session user_id: 27
+[05-Mar-2026 16:19:08 Europe/Berlin] Session performed_by: finance
+[05-Mar-2026 16:19:08 Europe/Berlin] POST action: get_approved_requests
+[05-Mar-2026 16:19:08 Europe/Berlin] ✅ Database connected
+[05-Mar-2026 16:19:09 Europe/Berlin] === NEW REQUEST ===
+[05-Mar-2026 16:19:09 Europe/Berlin] Session user_id: 27
+[05-Mar-2026 16:19:09 Europe/Berlin] Session performed_by: finance
+[05-Mar-2026 16:19:09 Europe/Berlin] POST action: get_approved_requests
+[05-Mar-2026 16:19:09 Europe/Berlin] ✅ Database connected
+[05-Mar-2026 16:19:13 Europe/Berlin] === NEW REQUEST ===
+[05-Mar-2026 16:19:13 Europe/Berlin] Session user_id: 27
+[05-Mar-2026 16:19:13 Europe/Berlin] Session performed_by: finance
+[05-Mar-2026 16:19:13 Europe/Berlin] POST action: finance_approve
+[05-Mar-2026 16:19:13 Europe/Berlin] ✅ Database connected
+[05-Mar-2026 16:19:13 Europe/Berlin] ╔═══════════════════════════════════════════════════════╗
+[05-Mar-2026 16:19:13 Europe/Berlin] ║ FINANCE APPROVE PROCESS STARTED
+[05-Mar-2026 16:19:13 Europe/Berlin] ║ PR ID: 40
+[05-Mar-2026 16:19:13 Europe/Berlin] ╚═══════════════════════════════════════════════════════╝
+[05-Mar-2026 16:19:13 Europe/Berlin] PR found: PR-2026-0010
+[05-Mar-2026 16:19:13 Europe/Berlin] Amount calculation:
+[05-Mar-2026 16:19:13 Europe/Berlin]   Original: PHP 135,909,069.12
+[05-Mar-2026 16:19:13 Europe/Berlin]   PHP equivalent: ₱135,909,069.12
+[05-Mar-2026 16:19:13 Europe/Berlin] Budget check:
+[05-Mar-2026 16:19:13 Europe/Berlin]   Required: ₱135,909,069.12
+[05-Mar-2026 16:19:13 Europe/Berlin]   Available: ₱12,980.57
+[05-Mar-2026 16:19:13 Europe/Berlin]   Sufficient? NO
+[05-Mar-2026 16:19:13 Europe/Berlin] ╔═══════════════════════════════════════════════════════╗
+[05-Mar-2026 16:19:13 Europe/Berlin] ║ INSUFFICIENT BUDGET DETECTED!
+[05-Mar-2026 16:19:13 Europe/Berlin] ║ Now attempting to log to activity_logs...
+[05-Mar-2026 16:19:13 Europe/Berlin] ╚═══════════════════════════════════════════════════════╝
+[05-Mar-2026 16:19:13 Europe/Berlin] Preparing INSERT statement...
+[05-Mar-2026 16:19:13 Europe/Berlin]   activity_type: budget_insufficient
+[05-Mar-2026 16:19:13 Europe/Berlin]   user_id: 27
+[05-Mar-2026 16:19:13 Europe/Berlin]   performed_by: finance
+[05-Mar-2026 16:19:13 Europe/Berlin]   pr_number: PR-2026-0010
+[05-Mar-2026 16:19:13 Europe/Berlin]   description length: 153
+[05-Mar-2026 16:19:13 Europe/Berlin] ✅ Statement prepared successfully
+[05-Mar-2026 16:19:13 Europe/Berlin] ✅ Parameters bound successfully
+[05-Mar-2026 16:19:13 Europe/Berlin] ✅✅✅ INSERT SUCCESSFUL!
+[05-Mar-2026 16:19:13 Europe/Berlin] Insert ID: 157
+[05-Mar-2026 16:19:13 Europe/Berlin] Affected rows: 1
+[05-Mar-2026 16:19:13 Europe/Berlin] ✅✅✅ VERIFIED: Record exists in database!
+[05-Mar-2026 16:19:13 Europe/Berlin] Record details: {"id":"157","activity_type":"","user_id":"27","performed_by":"finance","target_user":null,"pr_number":"PR-2026-0010","description":"Finance approval BLOCKED: Insufficient budget for PR #PR-2026-0010 | Required: \u20b1135,909,069.12 | Available: \u20b112,980.57 | Shortfall: \u20b1135,896,088.55","details":null,"ip_address":null,"created_at":"2026-03-05 23:19:13"}
+[05-Mar-2026 16:25:07 Europe/Berlin] === FINANCE APPROVE for PR ID: 40 ===
+[05-Mar-2026 16:25:07 Europe/Berlin] Budget Check: Required=₱135,909,069.12 | Available=₱12,980.57
+[05-Mar-2026 16:25:07 Europe/Berlin] ❌ INSUFFICIENT BUDGET - Logging to activity_logs
+[05-Mar-2026 16:25:07 Europe/Berlin] ✅ Activity logged successfully - ID: 160
+[05-Mar-2026 16:25:11 Europe/Berlin] Status email sent to requestor@gmail.com for PR PR-2026-0010 - budget_insufficient
+[09-Mar-2026 15:59:06 Europe/Berlin] === FINANCE REJECT for PR ID: 40 ===
+[09-Mar-2026 15:59:06 Europe/Berlin] ❌ ERROR: Unknown column 'finance_rejected_by' in 'field list'
+[09-Mar-2026 16:02:51 Europe/Berlin] Session: user_id = 27 | performed_by = finance
+[09-Mar-2026 16:02:59 Europe/Berlin] Session: user_id = 27 | performed_by = finance
+[09-Mar-2026 16:02:59 Europe/Berlin] === FINANCE REJECT STARTED for PR ID: 40 ===
+[09-Mar-2026 16:02:59 Europe/Berlin] ERROR in finance_reject: Unknown column 'finance_rejection_reason' in 'field list'
+[09-Mar-2026 16:09:03 Europe/Berlin] === FINANCE REJECT for PR ID: 40 ===
+[09-Mar-2026 16:09:08 Europe/Berlin] Status email sent to requestor@gmail.com for PR PR-2026-0010 - rejected_by_finance
+[12-Mar-2026 15:21:52 Europe/Berlin] === APPROVE STARTED for PR ID: 525 ===
+[12-Mar-2026 15:21:52 Europe/Berlin] Budget: Required=₱38,025.00 | Available=₱12,980.57
+[12-Mar-2026 15:21:52 Europe/Berlin] INSUFFICIENT BUDGET LOGGED - ID: 169
+[12-Mar-2026 15:22:12 Europe/Berlin] === APPROVE STARTED for PR ID: 517 ===
+[12-Mar-2026 15:22:12 Europe/Berlin] Budget: Required=₱327.60 | Available=₱12,980.57
+[12-Mar-2026 15:22:16 Europe/Berlin] Status email sent to requestor@gmail.com for PR PR-2026-0027 - approved_by_finance
+[13-Mar-2026 14:34:49 Europe/Berlin] === APPROVE STARTED for PR ID: 538 ===
+[13-Mar-2026 14:34:49 Europe/Berlin] Budget: Required=₱10.60 | Available=₱12,652.97
+[13-Mar-2026 14:34:53 Europe/Berlin] Status email sent to requestor@gmail.com for PR PR-2026-0040 - approved_by_finance
+[11-Jun-2026 10:54:17 Europe/Berlin] === APPROVE STARTED for PR ID: 509 ===
+[11-Jun-2026 10:54:17 Europe/Berlin] Budget: Required=₱7,254.00 | Available=₱13,262.51
+[11-Jun-2026 10:54:17 Europe/Berlin] Status email failed for PR PR-2026-0019: SMTP Error: Could not connect to SMTP host. Failed to connect to server
+[25-Jun-2026 16:44:53 Europe/Berlin] === APPROVE STARTED for PR ID: 509 ===
+[25-Jun-2026 16:44:53 Europe/Berlin] Budget: Required=₱7,254.00 | Available=₱13,262.51
+[25-Jun-2026 16:44:58 Europe/Berlin] Status email sent to dane.rohan1111@gmail.com for PR PR-2026-0019 - approved_by_finance
+[25-Jun-2026 16:44:58 Europe/Berlin] === APPROVE STARTED for PR ID: 509 ===
+[25-Jun-2026 16:44:58 Europe/Berlin] Budget: Required=₱7,254.00 | Available=₱6,008.51
+[25-Jun-2026 16:44:58 Europe/Berlin] INSUFFICIENT BUDGET LOGGED - ID: 102
+[29-Jun-2026 14:56:16 Europe/Berlin] === APPROVE STARTED for PR ID: 510 ===
+[29-Jun-2026 14:56:16 Europe/Berlin] Budget: Required=₱707.85 | Available=₱359,100.20
+[29-Jun-2026 14:56:21 Europe/Berlin] Status email sent to requestor@gmail.com for PR PR-2026-0020 - approved_by_finance
+[30-Jun-2026 18:06:34 Europe/Berlin] === APPROVE STARTED for PR ID: 510 ===
+[30-Jun-2026 18:06:34 Europe/Berlin] Budget: Required=₱1,503.45 | Available=₱13,262.51
+[30-Jun-2026 18:06:39 Europe/Berlin] Status email sent to requestor@gmail.com for PR PR-2026-0020 - approved_by_finance

@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>History — Procurement System</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../CSS/history.css" />
+    <link rel="stylesheet" href="../CSS/theme.css" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="profile">
+          <img src="../Assets/Avatar.jpg" alt="Admin" />
+          <span class="role">FINANCE</span>
+        </div>
+
+        <nav class="nav-menu">
+        <ul>
+          <li>
+            <a href="finance-dashboard.php"><i class="fas fa-dollar-sign"></i> Finance</a>
+          </li>
+          <li>
+            <a href="budget-approvals.html"><i class="fas fa-check-double"></i> Budget Approvals</a>
+          </li>
+          <li>
+            <a href="finance-budget.php"><i class="fas fa-wallet"></i> Budget</a>
+          </li>
+          <li>
+            <a href="withdrawals.php"><i class="fas fa-rotate-left"></i> Withdrawals</a>
+          </li>
+          <li>
+            <a href="history.html" class="active"><i class="fas fa-history"></i> History</a>
+          </li>
+        </ul>
+      </nav>
+
+        <button
+          onclick="window.location.href = '../../Admin/PHP/logout.php'"
+          class="logout-btn"
+        >
+          LOGOUT
+        </button>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <div class="page-header">
+          <h1>Activity History</h1>
+          <div class="filter-controls">
+            <select id="activityTypeFilter" class="filter-select">
+              <option value="all">All Requests</option>
+              <option value="request_created">Created</option>
+              <option value="request_pending">Pending</option>
+              <option value="request_approved">Approved</option>
+              <option value="request_rejected">Rejected</option>
+              <option value="request_cancelled">Cancelled</option>
+            </select>
+            <input type="date" class="date-filter" id="dateFilter" />
+            <button class="clear-filter-btn" id="clearFilters">
+              <i class="fas fa-times"></i> Clear
+            </button>
+          </div>
+        </div>
+
+        <!-- Activity Stats -->
+        <div class="stats-row">
+          <div class="stat-card">
+            <i class="fas fa-clipboard-list"></i>
+            <div>
+              <h3 id="totalActivities">0</h3>
+              <p>Total Activities</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <i class="fas fa-check-circle"></i>
+            <div>
+              <h3 id="totalApproved">0</h3>
+              <p>Approved</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <i class="fas fa-times-circle"></i>
+            <div>
+              <h3 id="totalRejected">0</h3>
+              <p>Rejected</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <i class="fas fa-clock"></i>
+            <div>
+              <h3 id="totalUsers">0</h3>
+              <p>Pending Requests</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- History Timeline Card -->
+        <div class="history-card">
+          <!-- Loading & Empty states OUTSIDE the scrollable #timeline -->
+          <div class="loading-state" id="loadingState">
+            <i class="fas fa-spinner fa-spin fa-3x"></i>
+            <p>Loading activity history...</p>
+          </div>
+
+          <div class="empty-state" id="emptyState" style="display: none">
+            <i class="fas fa-inbox fa-3x"></i>
+            <p>No activities found</p>
+            <small>Try adjusting your filters</small>
+          </div>
+
+          <!-- Scrollable timeline area -->
+          <div class="timeline" id="timeline">
+            <!-- Dynamic items go here -->
+          </div>
+        </div>
+
+        <!-- Load More -->
+        <div
+          class="load-more"
+          id="loadMoreContainer"
+          style="display: none; text-align: center; margin-top: 24px"
+        >
+          <button class="load-more-btn" id="loadMoreBtn">
+            Load More Activities
+          </button>
+        </div>
+      </main>
+    </div>
+
+    <!-- Activity Detail Modal -->
+    <div class="modal" id="activityModal" style="display: none">
+      <div class="modal-content">
+        <span class="modal-close" id="closeActivityModal">×</span>
+        <h2 id="modalTitle">Activity Details</h2>
+        <div id="modalBody"></div>
+      </div>
+    </div>
+
+    <script src="../JS/history.js"></script>
+  </body>
+</html>

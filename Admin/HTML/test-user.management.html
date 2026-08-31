@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TEST - User Management</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        background: #f4f4f4;
+      }
+      .container {
+        display: flex;
+        min-height: 100vh;
+      }
+      .sidebar {
+        width: 250px;
+        background: #2c3e50;
+        color: white;
+        padding: 20px;
+      }
+      .main-content {
+        flex: 1;
+        padding: 20px;
+      }
+      .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+      .add-btn {
+        background: #3498db;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+      .table-card {
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+      th {
+        background: #34495e;
+        color: white;
+      }
+      .actions button {
+        margin: 0 5px;
+        padding: 5px 10px;
+        border: none;
+        cursor: pointer;
+        border-radius: 3px;
+      }
+      .edit-btn {
+        background: #f39c12;
+        color: white;
+      }
+      .delete-btn {
+        background: #e74c3c;
+        color: white;
+      }
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+      }
+      .modal-content {
+        background: white;
+        margin: 10% auto;
+        padding: 20px;
+        border-radius: 8px;
+        width: 80%;
+        max-width: 500px;
+      }
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+      }
+      .form-group {
+        display: flex;
+        flex-direction: column;
+      }
+      .form-group label {
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+      .form-group input,
+      .form-group select {
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+      .modal-actions {
+        text-align: right;
+        margin-top: 20px;
+      }
+      .save-btn,
+      .cancel-btn {
+        padding: 10px 20px;
+        margin-left: 10px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      .save-btn {
+        background: #27ae60;
+        color: white;
+      }
+      .cancel-btn {
+        background: #95a5a6;
+        color: white;
+      }
+      .close {
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <aside class="sidebar">
+        <div style="text-align: center; margin-bottom: 30px">
+          <img
+            src="../Assets/Avatar.jpg"
+            alt="Admin"
+            style="width: 80px; border-radius: 50%"
+          />
+          <span style="display: block; font-weight: bold">ADMIN</span>
+        </div>
+        <ul style="list-style: none; padding: 0">
+          <li>
+            <a
+              href="#"
+              style="
+                color: white;
+                text-decoration: none;
+                display: block;
+                padding: 10px;
+              "
+              ><i class="fas fa-tachometer-alt"></i> Dashboard</a
+            >
+          </li>
+          <li>
+            <a
+              href="#"
+              style="
+                color: #3498db;
+                text-decoration: none;
+                display: block;
+                padding: 10px;
+              "
+              ><i class="fas fa-users"></i> User Management</a
+            >
+          </li>
+          <li>
+            <a
+              href="#"
+              style="
+                color: white;
+                text-decoration: none;
+                display: block;
+                padding: 10px;
+              "
+              ><i class="fas fa-clock"></i> Pending Approvals</a
+            >
+          </li>
+          <li>
+            <a
+              href="#"
+              style="
+                color: white;
+                text-decoration: none;
+                display: block;
+                padding: 10px;
+              "
+              ><i class="fas fa-download"></i> Export</a
+            >
+          </li>
+          <li>
+            <a
+              href="#"
+              style="
+                color: white;
+                text-decoration: none;
+                display: block;
+                padding: 10px;
+              "
+              ><i class="fas fa-history"></i> History</a
+            >
+          </li>
+        </ul>
+        <button
+          style="
+            width: 100%;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 15px;
+            margin-top: 30px;
+            cursor: pointer;
+            border-radius: 5px;
+          "
+        >
+          LOGOUT
+        </button>
+      </aside>
+      <main class="main-content">
+        <div class="page-header">
+          <h1>User Management</h1>
+          <button class="add-btn" onclick="openAddModal()">
+            <i class="fas fa-plus"></i> Add Employee
+          </button>
+        </div>
+        <div class="table-card">
+          <table>
+            <thead>
+              <tr>
+                <th>Employee ID</th>
+                <th>Last Name</th>
+                <th>First Name</th>
+                <th>Middle Name</th>
+                <th>Role</th>
+                <th>Gender</th>
+                <th>Email</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="employeeTableBody">
+              <tr>
+                <td colspan="8">Loading users...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+
+    <!-- ADD MODAL -->
+    <div id="addModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeAddModal()">&times;</span>
+        <h2>Add Employee</h2>
+        <form id="addForm">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>First Name</label>
+              <input type="text" id="addFirstName" required />
+            </div>
+            <div class="form-group">
+              <label>Last Name</label>
+              <input type="text" id="addLastName" required />
+            </div>
+            <div class="form-group">
+              <label>Middle Name</label>
+              <input type="text" id="addMiddleName" />
+            </div>
+            <div class="form-group">
+              <label>Username</label>
+              <input type="text" id="addUsername" required />
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" id="addEmail" required />
+            </div>
+            <div class="form-group">
+              <label>Password</label>
+              <input type="password" id="addPassword" required />
+            </div>
+            <div class="form-group">
+              <label>Gender</label>
+              <select id="addGender">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Role</label>
+              <select id="addRole">
+                <option value="ADMIN">Admin</option>
+                <option value="APPROVER">Approver</option>
+                <option value="REQUESTOR">Requestor</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="cancel-btn" onclick="closeAddModal()">
+              Cancel
+            </button>
+            <button type="submit" class="save-btn">Add Employee</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- EDIT MODAL (simple version) -->
+    <div id="editModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeEditModal()">&times;</span>
+        <h2>Edit User</h2>
+        <form id="editForm">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>First Name</label>
+              <input type="text" id="editFirstName" required />
+            </div>
+            <div class="form-group">
+              <label>Last Name</label>
+              <input type="text" id="editLastName" required />
+            </div>
+            <div class="form-group">
+              <label>Middle Name</label>
+              <input type="text" id="editMiddleName" />
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" id="editEmail" required />
+            </div>
+            <div class="form-group">
+              <label>Gender</label>
+              <select id="editGender">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Role</label>
+              <select id="editRole">
+                <option value="ADMIN">Admin</option>
+                <option value="APPROVER">Approver</option>
+                <option value="REQUESTOR">Requestor</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="cancel-btn" onclick="closeEditModal()">
+              Cancel
+            </button>
+            <button type="submit" class="save-btn">Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      let currentUserId = null;
+
+      // Load users immediately
+      loadUsers();
+
+      function loadUsers() {
+        console.log("Loading users...");
+        fetch("../PHP/fetch-users.php")
+          .then((response) => {
+            console.log("Response status:", response.status);
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then((users) => {
+            console.log("Users data:", users);
+            const tbody = document.getElementById("employeeTableBody");
+            tbody.innerHTML = "";
+
+            if (users.length === 0) {
+              tbody.innerHTML = '<tr><td colspan="8">No users found</td></tr>';
+              return;
+            }
+
+            users.forEach((user) => {
+              tbody.innerHTML += `
+              <tr>
+                <td>${user.id}</td>
+                <td>${user.lastname || ""}</td>
+                <td>${user.firstname || ""}</td>
+                <td>${user.middlename || ""}</td>
+                <td>${user.role}</td>
+                <td>${user.gender || "—"}</td>
+                <td>${user.email}</td>
+                <td class="actions">
+                  <button class="edit-btn" onclick="openEditModal(${
+                    user.id
+                  }, '${user.firstname || ""}', '${user.lastname || ""}', '${
+                user.middlename || ""
+              }', '${user.email}', '${user.role}', '${user.gender || ""}')">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="delete-btn" onclick="deleteUser(${user.id})">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </td>
+              </tr>
+            `;
+            });
+          })
+          .catch((error) => {
+            console.error("Error loading users:", error);
+            const tbody = document.getElementById("employeeTableBody");
+            tbody.innerHTML =
+              '<tr><td colspan="8">Error: ' +
+              error.message +
+              " (Check console F12)</td></tr>";
+          });
+      }
+
+      // Add user form
+      document
+        .getElementById("addForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const data = {
+            firstname: document.getElementById("addFirstName").value,
+            lastname: document.getElementById("addLastName").value,
+            middlename: document.getElementById("addMiddleName").value,
+            username: document.getElementById("addUsername").value,
+            email: document.getElementById("addEmail").value,
+            password: document.getElementById("addPassword").value,
+            gender: document.getElementById("addGender").value,
+            role: document.getElementById("addRole").value,
+          };
+          fetch("../PHP/add-user.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+          })
+            .then((r) => r.text())
+            .then((msg) => {
+              alert(msg);
+              closeAddModal();
+              this.reset();
+              loadUsers();
+            })
+            .catch((err) => alert("Add error: " + err));
+        });
+
+      // Edit user form
+      document
+        .getElementById("editForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const data = {
+            id: currentUserId,
+            firstname: document.getElementById("editFirstName").value,
+            lastname: document.getElementById("editLastName").value,
+            middlename: document.getElementById("editMiddleName").value,
+            email: document.getElementById("editEmail").value,
+            gender: document.getElementById("editGender").value,
+            role: document.getElementById("editRole").value,
+          };
+          fetch("../PHP/update-user.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+          })
+            .then((r) => r.text())
+            .then((msg) => {
+              alert(msg);
+              closeEditModal();
+              loadUsers();
+            })
+            .catch((err) => alert("Edit error: " + err));
+        });
+
+      function openAddModal() {
+        document.getElementById("addModal").style.display = "block";
+      }
+
+      function closeAddModal() {
+        document.getElementById("addModal").style.display = "none";
+      }
+
+      function openEditModal(
+        id,
+        firstname,
+        lastname,
+        middlename,
+        email,
+        role,
+        gender
+      ) {
+        currentUserId = id;
+        document.getElementById("editFirstName").value = firstname;
+        document.getElementById("editLastName").value = lastname;
+        document.getElementById("editMiddleName").value = middlename;
+        document.getElementById("editEmail").value = email;
+        document.getElementById("editRole").value = role;
+        document.getElementById("editGender").value = gender;
+        document.getElementById("editModal").style.display = "block";
+      }
+
+      function closeEditModal() {
+        document.getElementById("editModal").style.display = "none";
+      }
+
+      function deleteUser(id) {
+        if (confirm("Delete this user?")) {
+          fetch("../PHP/delete-user.php?id=" + id)
+            .then(() => loadUsers())
+            .catch((err) => alert("Delete error: " + err));
+        }
+      }
+
+      // Close modals on outside click
+      window.onclick = function (event) {
+        const modals = document.getElementsByClassName("modal");
+        for (let modal of modals) {
+          if (event.target === modal) {
+            modal.style.display = "none";
+          }
+        }
+      };
+    </script>
+  </body>
+</html>

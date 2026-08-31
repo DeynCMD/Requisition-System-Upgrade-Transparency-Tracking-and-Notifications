@@ -1,0 +1,152 @@
+<?php
+ini_set('session.cookie_samesite','Lax');
+session_start();
+if(!isset($_SESSION['role'])||$_SESSION['role']!=='ADMIN'){header('Location: ../../Admin/HTML/ZE-Electronics.php');exit;}
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+header('Pragma: no-cache');
+?>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pending Approvals — Procurement System</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../../Admin/JS/currency.js"></script>
+    <link rel="stylesheet" href="../CSS/pending_style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="profile">
+          <img src="../Assets/Avatar.jpg" alt="Approver" />
+          <span class="role">ADMIN</span>
+        </div>
+
+        <nav class="nav-menu">
+          <ul>
+            <ul>
+              <li>
+                <a href="AdminZE.php"
+                  ><i class="fas fa-tachometer-alt"></i> Dashboard</a
+                >
+              </li>
+              <li>
+                <a href="Admin-users.php"
+                  ><i class="fas fa-users"></i> User Management</a
+                >
+              </li>
+              <li>
+                <a href="Pending-approvals.html" class="active"
+                  ><i class="fas fa-clock"></i> Pending Approvals</a
+                >
+              </li>
+              <li>
+                <a href="suppliers.php"><i class="fas fa-truck-field"></i> Suppliers</a>
+              </li>
+              <li>
+                <a href="admin_price_prediction.php"
+                  ><i class="fas fa-chart-line"></i> Price Prediction</a
+                >
+              </li>
+              <li>
+                <a href="HistoryZE.php"
+                  ><i class="fas fa-history"></i> History</a
+                >
+              </li>
+            </ul>
+          </ul>
+        </nav>
+
+        <a href="../PHP/logout.php" class="logout-btn">LOGOUT</a>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <div class="page-header">
+          <h1>Pending Approvals</h1>
+          <div class="search-bar">
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Search PR Number, Requestor, Category..."
+            />
+            <i class="fas fa-search"></i>
+          </div>
+        </div>
+
+        <div class="table-card">
+          <div class="table-header-info">
+            <span id="pendingCount">0</span> pending requests
+          </div>
+
+          <table class="approval-table" id="pendingTable">
+            <thead>
+              <tr>
+                <th>PR#</th>
+                <th>Requestor</th>
+                <th>Date</th>
+                <th>Category</th>
+                <th>Subcategory</th>
+                <th>Qty</th>
+                <th>Item (MPN)</th>
+                <th>Urgency</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+
+          <div class="table-empty-state" id="emptyState" style="display: none">
+            <i class="fas fa-check-circle fa-3x"></i>
+            <p>No pending requests at the moment</p>
+          </div>
+        </div>
+
+        <!-- Bidding stage: admin-approved PRs awaiting winning bid selection -->
+        <div class="table-card" style="margin-top:24px;">
+          <div class="table-header-info" style="display:flex;align-items:center;gap:10px;">
+            <i class="fas fa-gavel" style="color:#fbbf24"></i>
+            <span><span id="biddingCount">0</span> PRs awaiting winning bid selection</span>
+          </div>
+
+          <table class="approval-table" id="biddingTable">
+            <thead>
+              <tr>
+                <th>PR#</th>
+                <th>Requestor</th>
+                <th>Item (MPN)</th>
+                <th>Category</th>
+                <th>Qty</th>
+                <th>Bids</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="biddingTableBody"></tbody>
+          </table>
+
+          <div class="table-empty-state" id="biddingEmptyState" style="display: none">
+            <i class="fas fa-gavel fa-3x"></i>
+            <p>No PRs awaiting winning bid selection</p>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Modal for full request details -->
+    <div class="modal" id="detailModal">
+      <div class="modal-content">
+        <span class="modal-close" id="closeModal">×</span>
+        <h2>Purchase Request Details</h2>
+        <div id="modalContent"></div>
+      </div>
+    </div>
+
+    <script src="../JS/pending_approval.js"></script>
+  </body>
+</html>

@@ -1,0 +1,439 @@
+/* =========================================
+   ADMIN DASHBOARD - DARK THEME (Complete Version)
+   Fully consistent + Charts support
+   ========================================= */
+
+:root {
+    --bg-dark: #1e1e2e;
+    --sidebar: #2d2d44;
+    --card-bg: #2a2a3a;
+    --text-light: #e0e0ff;
+    --green: #4ade80;
+    --red: #f87171;
+    --yellow: #fbbf24;
+    --purple: #a78bfa;
+    --border: #444;
+    --gray: #999;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: #12121a;
+    color: var(--text-light);
+    min-height: 100vh;
+}
+
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ======================
+   SIDEBAR
+   ====================== */
+.sidebar {
+    width: 260px;
+    background: var(--sidebar);
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    position: fixed;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.profile img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--purple);
+    display: block;
+    margin: 0 auto;
+}
+
+.role {
+    background: #22c55e;
+    color: white;
+    font-size: 0.8rem;
+    padding: 6px 16px;
+    border-radius: 30px;
+    display: block;
+    width: fit-content;
+    margin: 12px auto 0;
+}
+
+.nav-menu ul {
+    list-style: none;
+    flex-grow: 1;
+}
+
+.nav-menu a {
+    color: #b0b0cc;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    border-radius: 12px;
+    transition: all 0.3s;
+    font-weight: 500;
+}
+
+.nav-menu a:hover,
+.nav-menu a.active {
+    background: #22c55e;
+    color: white;
+}
+
+.nav-menu i {
+    width: 20px;
+    text-align: center;
+}
+
+.logout-btn {
+    background: #ef4444;
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: 0.3s;
+    text-decoration: none !important;
+    text-align: center;
+    display: block;
+}
+
+.logout-btn:hover {
+    background: var(--red);
+}
+
+/* ======================
+   MAIN CONTENT
+   ====================== */
+.main-content {
+    flex: 1;
+    padding: 40px;
+    background: var(--bg-dark);
+    margin-left: 260px;
+}
+
+.main-content header h1 {
+    color: var(--green);
+    font-size: 2.2rem;
+    margin-bottom: 30px;
+}
+
+.content-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+}
+
+.card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.card .text h3 {
+    font-size: 1rem;
+    margin-bottom: 8px;
+    opacity: 0.9;
+    color: var(--text-light);
+}
+
+.card .number {
+    font-size: 3rem;
+    font-weight: bold;
+    color: var(--text-light);
+}
+
+.card i {
+    font-size: 2.8rem;
+    opacity: 0.7;
+}
+
+/* Status-specific icon colors */
+.total-activity i {
+    color: var(--purple);
+}
+.requests i {
+    color: var(--yellow);
+}
+.approved i {
+    color: var(--green);
+}
+.user-changes i {
+    color: var(--purple);
+}
+
+/* Charts Grid */
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 24px;
+}
+
+.chart-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.chart-card h3 {
+    color: var(--yellow);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.2rem;
+}
+
+.chart-card canvas {
+    max-height: 320px;
+}
+
+/* Bottom Section: Pending + Activity */
+.bottom-section {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+.table-card {
+    flex: 2;
+    min-width: 320px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.table-header {
+    margin-bottom: 20px;
+    color: var(--yellow);
+    font-size: 1.1rem;
+}
+
+.table-header i {
+    margin-right: 8px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    text-align: left;
+    color: var(--gray);
+    font-weight: normal;
+    padding-bottom: 12px;
+    font-size: 0.9rem;
+}
+
+td {
+    padding: 16px 0;
+    border-top: 1px solid var(--border);
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.status-badge.pending {
+    background: var(--yellow);
+    color: #000;
+}
+
+.delayed-row {
+    background: rgba(248, 113, 113, 0.15);
+}
+
+.text-danger {
+    color: var(--red);
+    font-weight: 600;
+}
+
+/* Recent Activity */
+.recent-activity {
+    flex: 1;
+    min-width: 320px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.recent-activity h3 {
+    color: var(--yellow);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.activity-item {
+    background: #33334d;
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+}
+
+.activity-item strong {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--text-light);
+}
+
+.activity-item small {
+    color: #aaa;
+    font-size: 0.9rem;
+}
+
+.activity-item p {
+    margin-top: 8px;
+    color: #ccc;
+    font-size: 0.95rem;
+}
+
+.activity-item .time {
+    font-size: 0.85rem;
+    color: #aaa;
+    display: block;
+    margin-top: 6px;
+}
+
+.no-data {
+    text-align: center;
+    color: #aaa;
+    padding: 40px 0;
+    font-style: italic;
+}
+
+/* BAV99 Forecast Box */
+.forecast-box {
+    margin-top: 15px;
+    padding: 12px;
+    background: #33334d;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 1.1rem;
+    border: 1px solid var(--border);
+}
+
+.forecast-box strong {
+    color: var(--yellow);
+    margin-right: 8px;
+}
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .charts-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 992px) {
+    .main-content {
+        margin-left: 0;
+        padding: 20px;
+    }
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+    .container {
+        flex-direction: column;
+    }
+    .bottom-section {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 768px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    .chart-card canvas {
+        max-height: 280px;
+    }
+}
+
+/* ── PHP equivalent display ── */
+.php-equiv {
+    display: inline-block;
+    font-size: .75rem;
+    color: #9a9ab5;
+    font-weight: 400;
+    margin-left: 6px;
+}
+.php-equiv-block {
+    display: block;
+    font-size: .76rem;
+    color: #9a9ab5;
+    margin-top: 2px;
+}
+
+/* ── Urgency level badges (shared across all roles) ── */
+.urgency-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: .72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+}
+.urgency-normal {
+    background: #f1f5f9;
+    color: #475569;
+}
+.urgency-high {
+    background: #fff7ed;
+    color: #c2410c;
+    border: 1px solid #fed7aa;
+}
+.urgency-critical {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+    animation: urgency-pulse 1.8s ease-in-out infinite;
+}
+@keyframes urgency-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    50%       { box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.25); }
+}
+/* Row highlighting for high/critical in dark tables */
+tr.urgency-row-high td     { border-left: 3px solid #f97316 !important; }
+tr.urgency-row-critical td { border-left: 3px solid #ef4444 !important; background: rgba(239,68,68,.04) !important; }

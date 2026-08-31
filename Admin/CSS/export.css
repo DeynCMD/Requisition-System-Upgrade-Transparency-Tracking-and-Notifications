@@ -1,0 +1,567 @@
+:root {
+    --bg-dark: #1e1e2e;
+    --sidebar: #2d2d44;
+    --card-bg: #2a2a3a;
+    --text-light: #e0e0ff;
+    --green: #4ade80;
+    --red: #f87171;
+    --yellow: #fbbf24;
+    --purple: #a78bfa;
+    --blue: #60a5fa;
+    --border: #444;
+    --accent-green: #22c55e;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+body {
+    background: var(--bg-dark);
+    color: #e0e0e0;
+    min-height: 100vh;
+}
+
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 260px;
+    background: var(--sidebar);
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.profile img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--purple);
+    display: block;
+    margin: 0 auto;
+}
+
+.role {
+    background: #22c55e;
+    color: white;
+    font-size: 0.8rem;
+    padding: 6px 16px;
+    border-radius: 30px;
+    display: block;
+    width: fit-content;
+    margin: 12px auto 0;
+}
+
+.nav-menu ul {
+    list-style: none;
+    flex-grow: 1;
+}
+
+.nav-menu a {
+    color: #b0b0cc;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    border-radius: 12px;
+    transition: all 0.3s;
+    font-weight: 500;
+}
+
+.nav-menu a:hover,
+.nav-menu a.active {
+    background: #22c55e;
+    color: white;
+}
+
+.logout-btn {
+    background: #ef4444;
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: 0.3s;
+    text-decoration: none !important;
+    text-align: center;
+}
+
+.logout-btn:hover {
+    background: var(--red);
+}
+/* ====================== MAIN CONTENT ====================== */
+.main-content {
+    flex: 1;
+    padding: 40px;
+    overflow-y: auto;
+}
+
+.page-header {
+    margin-bottom: 30px;
+}
+
+.page-header h1 {
+    color: var(--green);
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.page-header h1 i {
+    margin-right: 10px;
+}
+
+.subtitle {
+    color: #888;
+    font-size: 0.95rem;
+}
+
+/* ====================== PR SELECTION CARD ====================== */
+.selection-card {
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.selection-card h2 {
+    color: var(--green);
+    font-size: 1.3rem;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.pr-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.pr-card {
+    background: #1e1e2e;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.pr-card:hover {
+    border-color: var(--accent-green);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(34, 197, 94, 0.2);
+}
+
+.pr-card.selected {
+    background: #333;
+    border-color: var(--accent-green);
+    box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+}
+
+.pr-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 15px;
+}
+
+.pr-card-header h3 {
+    color: var(--green);
+    font-size: 1.1rem;
+    margin: 0 0 8px 0;
+}
+
+.pr-card-header p {
+    color: #aaa;
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+.status-approved {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status-rejected {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.pr-card-info {
+    font-size: 0.9rem;
+    color: #ddd;
+    line-height: 1.8;
+}
+
+.pr-card-info p {
+    margin: 5px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.pr-card-info i {
+    width: 16px;
+    color: var(--green);
+}
+
+/* ====================== ACTION BUTTONS ====================== */
+.action-buttons {
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 25px;
+    margin-bottom: 30px;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.action-buttons button {
+    border: none;
+    padding: 14px 28px;
+    border-radius: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1rem;
+    transition: all 0.3s;
+}
+
+.btn-download {
+    background: var(--accent-green);
+    color: white;
+}
+
+.btn-download:hover {
+    background: var(--green);
+    box-shadow: 0 0 20px rgba(34, 197, 94, 0.4);
+}
+
+.btn-print {
+    background: transparent;
+    color: var(--green);
+    border: 2px solid var(--green);
+}
+
+.btn-print:hover {
+    background: var(--green);
+    color: white;
+}
+
+.btn-email {
+    background: transparent;
+    color: var(--blue);
+    border: 2px solid var(--blue);
+}
+
+.btn-email:hover {
+    background: var(--blue);
+    color: white;
+}
+
+.btn-share {
+    background: transparent;
+    color: var(--purple);
+    border: 2px solid var(--purple);
+}
+
+.btn-share:hover {
+    background: var(--purple);
+    color: white;
+}
+
+/* ====================== EMPTY STATE ====================== */
+.empty-state {
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 60px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.empty-state i {
+    font-size: 64px;
+    color: var(--green);
+    margin-bottom: 20px;
+}
+
+.empty-state h3 {
+    color: var(--green);
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    color: #888;
+    font-size: 1rem;
+}
+
+/* ====================== PR TEMPLATE ====================== */
+.pr-template {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    color: #000;
+}
+
+.pr-header {
+    border-bottom: 3px solid var(--accent-green);
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+}
+
+.company-name {
+    font-size: 28px;
+    font-weight: bold;
+    color: var(--accent-green);
+    margin-bottom: 5px;
+}
+
+.company-subtitle {
+    font-size: 14px;
+    color: #666;
+}
+
+.document-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    margin-top: 10px;
+}
+
+.pr-id-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.pr-id {
+    font-size: 16px;
+    font-weight: bold;
+    color: #000;
+}
+
+/* Info Grid */
+.pr-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.info-box {
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.info-label {
+    font-size: 11px;
+    color: #666;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+
+.info-value {
+    font-size: 14px;
+    color: #000;
+    font-weight: 500;
+}
+
+/* Section Title */
+.section-title {
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--accent-green);
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid var(--accent-green);
+}
+
+/* Items Table */
+.items-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+}
+
+.items-table th {
+    background: #f0f0f0;
+    padding: 12px 8px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    border: 1px solid #ddd;
+    text-transform: uppercase;
+}
+
+.items-table td {
+    padding: 10px 8px;
+    border: 1px solid #ddd;
+    font-size: 12px;
+}
+
+.items-table .total-row {
+    background: #f9f9f9;
+    font-weight: bold;
+}
+
+.items-table .total-row td {
+    font-size: 14px;
+}
+
+.total-amount {
+    color: var(--accent-green) !important;
+}
+
+/* Text Box */
+.text-box {
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 8px;
+    background: #fafafa;
+    margin-bottom: 20px;
+    min-height: 60px;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+/* Signatures */
+.signature-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-top: 50px;
+}
+
+.signature-box {
+    border-top: 2px solid #000;
+    padding-top: 10px;
+    text-align: center;
+}
+
+.signature-space {
+    height: 60px;
+}
+
+.signature-label {
+    font-size: 11px;
+    color: #666;
+    font-weight: 600;
+}
+
+.signature-name {
+    font-weight: bold;
+    margin-top: 5px;
+    font-size: 13px;
+}
+
+.signature-date {
+    font-size: 11px;
+    color: #999;
+}
+
+/* Footer */
+.pr-footer {
+    margin-top: 50px;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+    text-align: center;
+    font-size: 11px;
+    color: #999;
+}
+
+.pr-footer p {
+    margin: 5px 0;
+}
+
+/* ====================== PRINT STYLES ====================== */
+@media print {
+    @page {
+        margin: 20mm;
+    }
+
+    body {
+        background: white;
+    }
+
+    .sidebar,
+    .no-print,
+    .action-buttons {
+        display: none !important;
+    }
+
+    .main-content {
+        padding: 0;
+    }
+
+    .pr-template {
+        box-shadow: none;
+        border-radius: 0;
+        page-break-inside: avoid;
+    }
+
+    .signature-section {
+        page-break-inside: avoid;
+    }
+}
+
+/* ====================== RESPONSIVE ====================== */
+@media (max-width: 992px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+    }
+
+    .pr-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .pr-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .signature-section {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    .action-buttons {
+        justify-content: center;
+    }
+}

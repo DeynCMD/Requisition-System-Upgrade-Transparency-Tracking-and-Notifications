@@ -1,0 +1,49 @@
+# ================================================
+
+# .htaccess - Optimized for XAMPP + ngrok
+
+# ================================================
+
+<IfModule mod_rewrite.c>
+    # Enable rewrite engine
+    RewriteEngine On
+    RewriteBase /
+
+    # 1. Handle CORS for all requests (important for ngrok + frontend fetch)
+    Header always set Access-Control-Allow-Origin "*"
+    Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+    Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With, ngrok-skip-browser-warning"
+    Header always set Access-Control-Allow-Credentials "true"
+
+    # 2. Skip ngrok browser warning page (very important for free ngrok)
+    Header always set ngrok-skip-browser-warning "69420"
+
+    # 3. Handle preflight OPTIONS requests (required for CORS POST/PUT)
+    RewriteCond %{REQUEST_METHOD} OPTIONS
+    RewriteRule ^(.*)$ $1 [R=200,L]
+
+    # 4. Optional: Forward /api/* to your Node.js backend on port 3000
+    # Uncomment the next two lines if you want API calls to go to Node.js
+    # RewriteCond %{REQUEST_URI} ^/api/
+    # RewriteRule ^api/(.*)$ http://localhost:3000/api/$1 [P,L]
+
+    # 5. Prevent directory listing (security)
+    Options -Indexes
+
+    # 6. Force HTTPS (optional – good practice if you ever use real domain)
+    # RewriteCond %{HTTPS} off
+    # RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+</IfModule>
+
+# ================================================
+
+# Extra security headers (optional but recommended)
+
+# ================================================
+
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-XSS-Protection "1; mode=block"
+</IfModule>

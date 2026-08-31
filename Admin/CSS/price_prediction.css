@@ -1,0 +1,365 @@
+/* =========================================
+   ZE Electronics Admin - Unified Dark Theme
+   Matches provided style + Bigger Forecast Graph
+   Current date context: January 2026
+   ========================================= */
+
+:root {
+    --bg-dark: #12121a;
+    --sidebar: #2d2d44;
+    --card-bg: #2a2a3a;
+    --text-light: #e0e0ff;
+    --green: #4ade80; /* #22c55e in some places – using #4ade80 for consistency */
+    --red: #f87171;
+    --yellow: #fbbf24;
+    --purple: #a78bfa;
+    --border: #444;
+    --gray: #999;
+    --muted: #aaa;
+    --deep-muted: #b0b0cc;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--bg-dark);
+    color: var(--text-light);
+    min-height: 100vh;
+    line-height: 1.5;
+}
+
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ────────────────────────────────────────────────
+   SIDEBAR
+   ──────────────────────────────────────────────── */
+.sidebar {
+    width: 260px;
+    background: var(--sidebar);
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    position: fixed;
+    height: 100%;
+    overflow-y: auto;
+    border-right: 1px solid #3a3a55;
+}
+
+.profile img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--purple);
+    display: block;
+    margin: 0 auto 12px;
+}
+
+.role {
+    background: var(--green);
+    color: white;
+    font-size: 0.8rem;
+    padding: 6px 16px;
+    border-radius: 30px;
+    display: block;
+    width: fit-content;
+    margin: 12px auto 0;
+}
+
+.nav-menu ul {
+    list-style: none;
+    flex-grow: 1;
+}
+
+.nav-menu a {
+    color: var(--deep-muted);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    border-radius: 12px;
+    transition: all 0.3s;
+    font-weight: 500;
+    font-size: 1.02rem;
+}
+
+.nav-menu a:hover,
+.nav-menu a.active {
+    background: var(--green);
+    color: white;
+}
+
+.nav-menu i {
+    width: 20px;
+    text-align: center;
+    font-size: 1.15rem;
+}
+
+.logout-btn {
+    background: #ef4444;
+    color: white;
+    padding: 14px;
+    border-radius: 12px;
+    text-align: center;
+    font-weight: bold;
+    text-decoration: none;
+    display: block;
+    transition: 0.3s;
+}
+
+.logout-btn:hover {
+    background: var(--red);
+}
+
+/* ────────────────────────────────────────────────
+   MAIN CONTENT
+   ──────────────────────────────────────────────── */
+.main-content {
+    flex: 1;
+    padding: 40px 48px;
+    margin-left: 260px;
+    background: var(--bg-dark);
+}
+
+header h1 {
+    color: var(--green);
+    font-size: 2.3rem;
+    margin-bottom: 36px;
+    font-weight: 600;
+}
+
+/* ────────────────────────────────────────────────
+   PRICE PREDICTION PAGE – BIGGER GRAPH
+   ──────────────────────────────────────────────── */
+.price-prediction-section {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+    margin-bottom: 40px;
+    border: 1px solid #3a3a55;
+}
+
+.price-prediction-section h2 {
+    color: var(--green);
+    font-size: 1.9rem;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.search-container {
+    position: relative;
+    margin-bottom: 32px;
+}
+
+.search-box {
+    width: 100%;
+    padding: 16px 50px 16px 20px;
+    font-size: 1.1rem;
+    background: #222233;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--text-light);
+    transition: all 0.25s;
+}
+
+.search-box:focus {
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.2);
+    outline: none;
+}
+
+.search-icon {
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 1.4rem;
+}
+
+.autocomplete-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #222233;
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    max-height: 260px;
+    overflow-y: auto;
+    z-index: 100;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5);
+    display: none;
+}
+
+.autocomplete-item {
+    padding: 14px 20px;
+    cursor: pointer;
+    color: var(--text-light);
+    transition: background 0.2s;
+}
+
+.autocomplete-item:hover {
+    background: #383850;
+}
+
+.prediction-result {
+    display: none;
+    background: #222233;
+    border-radius: 12px;
+    padding: 28px;
+    border-left: 5px solid var(--green);
+    margin-top: 28px;
+}
+
+.prediction-result.show {
+    display: block;
+}
+
+.prediction-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+    margin: 28px 0;
+}
+
+.prediction-item {
+    background: #33334d;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.prediction-item h4 {
+    color: var(--gray);
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    letter-spacing: 0.4px;
+}
+
+.prediction-value {
+    font-size: 2.1rem;
+    font-weight: bold;
+    color: var(--text-light);
+}
+
+.trend-indicator {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-left: 12px;
+}
+
+.trend-up {
+    background: rgba(248, 113, 113, 0.2);
+    color: var(--red);
+}
+.trend-down {
+    background: rgba(74, 222, 128, 0.2);
+    color: var(--green);
+}
+.trend-stable {
+    background: rgba(251, 191, 36, 0.2);
+    color: var(--yellow);
+}
+
+.confidence-indicator {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 32px 0;
+    font-size: 1.05rem;
+}
+
+.confidence-bar {
+    flex: 1;
+    height: 12px;
+    background: #33334d;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.confidence-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--red), var(--yellow), var(--green));
+    transition: width 0.8s ease;
+}
+
+/* ─── BIGGER FORECAST GRAPH ─── */
+.forecast-chart-container {
+    background: #1c1c2e;
+    padding: 28px;
+    border-radius: 16px;
+    border: 1px solid #3a3a55;
+    margin-top: 20px;
+}
+
+canvas#forecastChart {
+    width: 100% !important;
+    height: 520px !important; /* ← significantly taller / bigger graph */
+    max-height: 580px;
+}
+
+/* Chart.js overrides for better match */
+.chartjs-render-monitor {
+    animation: chartfade 0.6s ease;
+}
+
+@keyframes chartfade {
+    from {
+        opacity: 0.4;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* ────────────────────────────────────────────────
+   Responsive adjustments
+   ──────────────────────────────────────────────── */
+@media (max-width: 1200px) {
+    .main-content {
+        padding: 32px 36px;
+    }
+}
+
+@media (max-width: 992px) {
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+    }
+    .main-content {
+        margin-left: 0;
+        padding: 24px 28px;
+    }
+    .container {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 768px) {
+    .prediction-grid {
+        grid-template-columns: 1fr;
+    }
+    canvas#forecastChart {
+        height: 420px !important;
+    }
+}

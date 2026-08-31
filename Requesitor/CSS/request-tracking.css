@@ -1,0 +1,239 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+body {
+    background: #121212;
+    color: #e0e0e0;
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 280px;
+    background: #1f1f1f;
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    transition: 0.3s;
+    position: relative;
+}
+
+.sidebar.hide { 
+    transform: translateX(-100%); 
+}
+
+.show-sidebar { 
+    transform: translateX(0) !important; 
+}
+
+.profile img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 4px solid #0b6d3a;
+    display: block;
+    margin: 0 auto 40px;
+    object-fit: cover;
+}
+
+.role-badge {
+    text-align: center;
+    background: #0b6d3a;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-size: 14px;
+    margin-bottom: 30px;
+    display: inline-block;
+    align-self: center;
+}
+
+.menu a {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 20px;
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+.menu a:hover {
+    background: #0a5f34;
+    transform: translateX(8px);
+}
+
+.menu a.active {
+    background: #0d4928;
+    font-weight: bold;
+}
+
+.logout {
+    margin-top: auto;
+    padding: 16px;
+    background: #cc1f1f;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.logout:hover {
+    background: #ff2626;
+    transform: scale(1.05);
+}
+
+.main-content {
+    flex: 1;
+    padding: 40px;
+    overflow-y: auto;
+}
+
+.dashboard-title {
+    font-size: 32px;
+    color: #00ff9d;
+    margin-bottom: 40px;
+    font-weight: 600;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.card {
+    background: #2a2a2a;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+}
+
+.pending {
+    border-color: #4da6ff;
+}
+
+.approved {
+    border-color: #4ade80;
+}
+
+.card-title {
+    font-size: 24px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.pending .card-title { color: #4da6ff; }
+.approved .card-title { color: #4ade80; }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #333333;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+th {
+    background: rgba(0, 0, 0, 0.3);
+    color: white;
+    padding: 16px 12px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+td {
+    padding: 16px 12px;
+    border-bottom: 1px solid #444;
+}
+
+tr:hover {
+    background: #3d3d3d;
+}
+
+.status-badge {
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.pending-status {
+    background: #1e40af;
+    color: #93c5fd;
+}
+
+.approved-status {
+    background: #166534;
+    color: #86efac;
+}
+
+.bottom-nav {
+    text-align: center;
+    padding: 24px;
+    background: #1e1e1e;
+    color: #00ff9d;
+    font-size: 16px;
+    margin-top: 60px;
+}
+
+.bottom-nav a {
+    color: #00ff9d;
+    text-decoration: none;
+    margin: 0 20px;
+    transition: 0.3s;
+}
+
+.bottom-nav a:hover {
+    text-decoration: underline;
+    color: #33ffaa;
+}
+
+@media (max-width: 1024px) {
+    .grid-container {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    .main-content {
+        padding: 30px;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        flex-direction: column;
+    }
+    .sidebar {
+        position: absolute;
+        height: 100vh;
+        z-index: 10;
+    }
+    .main-content {
+        padding: 20px;
+    }
+    .dashboard-title {
+        font-size: 28px;
+    }
+}

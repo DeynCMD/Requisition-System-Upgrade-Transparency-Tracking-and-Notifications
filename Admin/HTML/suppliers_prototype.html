@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+  STANDALONE PROTOTYPE — Supplier Bidding & PO Splitting
+  Fully self-contained: all CSS/fonts/colors are defined in THIS file.
+  Runs in the browser only (sample data + localStorage). Not connected to the
+  database or the rest of the app. Safe to delete. For visualization only.
+-->
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Suppliers &amp; PO Splitting — Prototype</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      /* matches the live admin dashboard palette */
+      --bg:        #12121a;
+      --sidebar:   #2d2d44;
+      --card:      #2a2a3a;
+      --card-soft: #33334d;
+      --field:     #1e1e2e;
+      --border:    #3a3a52;
+      --text:      #e0e0ff;
+      --muted:     #9a9ab5;
+
+      --green:  #22c55e;
+      --green-d:#16a34a;
+      --yellow: #fbbf24;
+      --purple: #a78bfa;
+      --red:    #f87171;
+
+      /* white table tokens */
+      --t-bg:    #ffffff;
+      --t-head:  #f1f5f9;
+      --t-line:  #e5e7eb;
+      --t-text:  #1f2937;
+      --t-muted: #64748b;
+      --t-hover: #f8fafc;
+
+      --r: 16px;
+      --shadow: 0 10px 30px rgba(0,0,0,.4);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+    h1, h2, h3, .brand { font-family: "Poppins", "Inter", sans-serif; }
+
+    .container { display: flex; min-height: 100vh; }
+
+    /* ---------- Sidebar ---------- */
+    .sidebar {
+      width: 260px; background: var(--sidebar);
+      padding: 30px 20px; display: flex; flex-direction: column; gap: 36px;
+      position: fixed; height: 100%; overflow-y: auto;
+    }
+    .profile { text-align: center; }
+    .profile img { width: 92px; height: 92px; border-radius: 50%; object-fit: cover; border: 4px solid var(--purple); }
+    .profile .ph { width: 92px; height: 92px; border-radius: 50%; margin: 0 auto; background: var(--card-soft); display: flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--purple); border: 4px solid var(--purple); }
+    .role { background: var(--green); color: #fff; font-size: .78rem; font-weight: 600; padding: 6px 16px; border-radius: 30px; display: inline-block; margin-top: 12px; }
+
+    .nav-menu ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .nav-menu a {
+      color: #b8b8d4; text-decoration: none; display: flex; align-items: center; gap: 14px;
+      padding: 13px 16px; border-radius: 12px; transition: all .25s; font-weight: 500; font-size: .95rem;
+    }
+    .nav-menu a i { width: 20px; text-align: center; }
+    .nav-menu a:hover { background: rgba(255,255,255,.06); color: #fff; }
+    .nav-menu a.active { background: var(--green); color: #fff; box-shadow: 0 6px 16px rgba(34,197,94,.35); }
+    .logout-btn { margin-top: auto; background: var(--red); color: #fff; text-align: center; padding: 13px; border-radius: 12px; text-decoration: none; font-weight: 700; transition: .25s; }
+    .logout-btn:hover { filter: brightness(.95); }
+
+    /* ---------- Main ---------- */
+    .main { flex: 1; margin-left: 260px; padding: 36px 40px; }
+    .page-title { font-size: 2rem; color: var(--green); margin-bottom: 6px; }
+    .page-sub { color: var(--muted); margin-bottom: 24px; font-size: .95rem; }
+
+    .demo-banner {
+      background: var(--card-soft); border: 1px dashed var(--yellow); color: var(--yellow);
+      padding: 12px 18px; border-radius: 12px; font-size: .9rem; margin-bottom: 26px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .reset-link { margin-left: auto; color: var(--text); cursor: pointer; text-decoration: underline; font-size: .85rem; }
+
+    /* ---------- Tabs ---------- */
+    .tabs { display: flex; gap: 10px; margin-bottom: 26px; flex-wrap: wrap; }
+    .tab-btn {
+      background: var(--card); border: 1px solid var(--border); color: #b8b8d4;
+      padding: 12px 22px; border-radius: 12px; cursor: pointer; font-family: inherit;
+      font-size: .95rem; font-weight: 500; display: flex; align-items: center; gap: 10px; transition: all .25s;
+    }
+    .tab-btn:hover { color: #fff; border-color: var(--green); }
+    .tab-btn.active { background: var(--green); color: #fff; border-color: var(--green); box-shadow: 0 6px 16px rgba(34,197,94,.3); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; animation: fade .2s ease; }
+    @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+    /* ---------- Cards ---------- */
+    .card { background: var(--card); border-radius: var(--r); padding: 24px; box-shadow: var(--shadow); margin-bottom: 26px; }
+    .card h2 { font-size: 1.1rem; color: var(--yellow); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+    .card h2 .hint { margin-left: auto; font-size: .78rem; color: var(--muted); font-weight: 400; font-family: "Inter", sans-serif; }
+
+    /* ---------- Forms ---------- */
+    .grid { display: grid; gap: 16px; }
+    .cols-4 { grid-template-columns: repeat(4, 1fr); }
+    .cols-2 { grid-template-columns: repeat(2, 1fr); }
+    @media (max-width: 1100px) { .cols-4 { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 720px) { .cols-4, .cols-2 { grid-template-columns: 1fr; } }
+
+    .field label { display: block; font-size: .8rem; color: var(--muted); margin-bottom: 6px; }
+    .field input, .field select {
+      width: 100%; background: var(--field); border: 1px solid var(--border); color: var(--text);
+      padding: 12px 14px; border-radius: 10px; font-size: .95rem; font-family: inherit; outline: none; transition: border-color .2s;
+    }
+    .field input:focus, .field select:focus { border-color: var(--green); }
+    .field input::placeholder { color: #6b6b85; }
+    .field.end { display: flex; align-items: flex-end; }
+
+    .btn {
+      background: var(--green); color: #fff; border: none; padding: 12px 22px; border-radius: 12px;
+      cursor: pointer; font-size: .95rem; font-weight: 600; font-family: inherit;
+      display: inline-flex; align-items: center; gap: 10px; transition: .2s;
+    }
+    .btn:hover { background: var(--green-d); }
+    .btn:disabled { opacity: .4; cursor: not-allowed; background: var(--green); }
+
+    .icon-btn { background: #fff; border: 1px solid var(--t-line); color: var(--t-muted); width: 34px; height: 34px; border-radius: 9px; cursor: pointer; transition: .2s; }
+    .icon-btn:hover { color: #111; border-color: #cbd5e1; }
+    .icon-btn.danger:hover { color: #fff; background: var(--red); border-color: var(--red); }
+    .row-actions { display: flex; gap: 8px; }
+
+    /* ---------- WHITE TABLE ---------- */
+    .table-wrap { background: var(--t-bg); border-radius: 12px; overflow-x: auto; overflow-y: hidden; border: 1px solid var(--t-line); }
+    table { width: 100%; border-collapse: collapse; }
+    thead { background: var(--t-head); }
+    th { text-align: left; color: var(--t-muted); font-weight: 600; font-size: .72rem; text-transform: uppercase; letter-spacing: .5px; padding: 14px 16px; border-bottom: 1px solid var(--t-line); }
+    td { padding: 14px 16px; border-bottom: 1px solid var(--t-line); color: var(--t-text); font-size: .9rem; }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: var(--t-hover); }
+    td strong { color: #0f172a; }
+    .empty { text-align: center; color: var(--t-muted); padding: 34px; font-style: italic; }
+    .dash { color: #cbd5e1; }
+    .alloc-input { width: 110px; background: #fff; border: 1px solid var(--t-line); color: var(--t-text); padding: 8px 10px; border-radius: 8px; font-family: inherit; outline: none; }
+    .alloc-input:focus { border-color: var(--green); }
+
+    /* badges on white table */
+    .badge { display: inline-flex; padding: 4px 11px; border-radius: 20px; font-size: .75rem; font-weight: 600; }
+    .badge.green { background: #dcfce7; color: #15803d; }
+    .badge.gray  { background: #f1f5f9; color: #64748b; }
+    .badge.blue  { background: #dbeafe; color: #1d4ed8; }
+    /* badge on dark card (request chips) */
+    .chip { display: inline-flex; padding: 5px 12px; border-radius: 20px; font-size: .8rem; font-weight: 600; background: rgba(167,139,250,.18); color: var(--purple); }
+
+    /* ---------- Request list (dark) ---------- */
+    .req-list { display: grid; gap: 12px; }
+    .req-item { border: 1px solid var(--border); background: var(--field); border-radius: 12px; padding: 16px 18px; cursor: pointer; transition: .2s; }
+    .req-item:hover { border-color: var(--green); }
+    .req-item.selected { border-color: var(--green); box-shadow: 0 0 0 1px var(--green); }
+    .req-item .top { display: flex; justify-content: space-between; align-items: center; }
+    .req-item .pr { font-weight: 700; }
+    .req-item .meta { color: var(--muted); font-size: .85rem; margin-top: 6px; }
+
+    /* ---------- Allocation summary ---------- */
+    .alloc-summary { display: flex; gap: 10px; flex-wrap: wrap; margin: 16px 0; }
+    .pill { flex: 1 1 110px; background: var(--field); border: 1px solid var(--border); padding: 9px 14px; border-radius: 10px; min-width: 0; }
+    .pill span { color: var(--muted); font-size: .72rem; }
+    .pill b { display: block; font-size: 1.05rem; margin-top: 2px; }
+    .pill.ok b { color: var(--green); }
+    .pill.bad b { color: var(--red); }
+
+    /* compact, responsive bidding tab */
+    #tab-bidding .grid.cols-4 { gap: 12px; }
+    #tab-bidding th, #tab-bidding td { padding: 10px 12px; font-size: .85rem; }
+    #tab-bidding .alloc-input { width: 90px; padding: 6px 8px; }
+    #tab-bidding .card { padding: 18px; }
+    @media (max-width: 640px) { #tab-bidding .grid.cols-4 { grid-template-columns: 1fr; } }
+
+    .mono { font-variant-numeric: tabular-nums; }
+
+    .toast { position: fixed; bottom: 26px; right: 26px; background: var(--green); color: #fff; padding: 14px 22px; border-radius: 12px; font-size: .95rem; font-weight: 600; box-shadow: 0 10px 30px rgba(0,0,0,.5); opacity: 0; transform: translateY(12px); transition: .25s; pointer-events: none; z-index: 100; }
+    .toast.show { opacity: 1; transform: none; }
+    .toast.err { background: var(--red); }
+
+    @media (max-width: 900px) {
+      .sidebar { position: relative; width: 100%; height: auto; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 16px; }
+      .nav-menu ul { flex-direction: row; flex-wrap: wrap; }
+      .logout-btn { margin: 0; }
+      .main { margin-left: 0; padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="profile">
+        <div class="ph"><i class="fas fa-user-shield"></i></div>
+        <span class="role">ADMIN</span>
+      </div>
+      <nav class="nav-menu">
+        <ul>
+          <li><a href="AdminZE.php"><i class="fas fa-gauge-high"></i> Dashboard</a></li>
+          <li><a href="Admin-users.php"><i class="fas fa-users"></i> User Management</a></li>
+          <li><a href="Pending-approvals.php"><i class="fas fa-clock"></i> Pending Approvals</a></li>
+          <li><a href="suppliers_prototype.html" class="active"><i class="fas fa-truck-field"></i> Suppliers</a></li>
+          <li><a href="admin_price_prediction.php"><i class="fas fa-chart-line"></i> Price Prediction</a></li>
+          <li><a href="HistoryZE.php"><i class="fas fa-clock-rotate-left"></i> History</a></li>
+        </ul>
+      </nav>
+      <a href="../PHP/logout.php" class="logout-btn">LOGOUT</a>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <h1 class="page-title">Suppliers &amp; PO Splitting</h1>
+      <p class="page-sub">Add suppliers, collect bids (price + delivery date) on an approved request, then split the order across multiple suppliers.</p>
+
+      <div class="demo-banner">
+        <i class="fas fa-flask"></i>
+        Standalone prototype — sample data in your browser only. Not connected to the database or live app.
+        <span class="reset-link" onclick="resetDemo()">Reset demo data</span>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="suppliers"><i class="fas fa-truck-field"></i> Suppliers</button>
+        <button class="tab-btn" data-tab="bidding"><i class="fas fa-gavel"></i> Bidding &amp; Splitting</button>
+        <button class="tab-btn" data-tab="pos"><i class="fas fa-file-invoice"></i> Generated POs</button>
+      </div>
+
+      <!-- TAB 1 -->
+      <div class="tab-panel active" id="tab-suppliers">
+        <div class="card">
+          <h2><i class="fas fa-plus-circle"></i> Add Supplier</h2>
+          <div class="grid cols-4">
+            <div class="field"><label>Supplier Name *</label><input id="s-name" placeholder="e.g. TechTrend Inc." /></div>
+            <div class="field"><label>Contact Person</label><input id="s-contact" placeholder="e.g. Maria Santos" /></div>
+            <div class="field"><label>Email</label><input id="s-email" placeholder="sales@techtrend.com" /></div>
+            <div class="field"><label>Phone</label><input id="s-phone" placeholder="+63 917 000 0000" /></div>
+          </div>
+          <div class="grid cols-2" style="margin-top:16px">
+            <div class="field"><label>Address</label><input id="s-address" placeholder="City / Country" /></div>
+            <div class="field end"><button class="btn" onclick="addSupplier()"><i class="fas fa-save"></i> Save Supplier</button></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2><i class="fas fa-list"></i> Suppliers <span class="hint" id="s-count"></span></h2>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Name</th><th>Contact</th><th>Email</th><th>Phone</th><th>Address</th><th>Status</th><th></th></tr></thead>
+              <tbody id="supplier-rows"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2 -->
+      <div class="tab-panel" id="tab-bidding">
+        <div class="card">
+          <h2><i class="fas fa-clipboard-check"></i> Select an Approved Request <span class="hint">sample data</span></h2>
+          <div class="req-list" id="request-list"></div>
+        </div>
+
+        <div id="bidding-area" style="display:none">
+          <div class="card">
+            <h2><i class="fas fa-gavel"></i> Supplier Bids for <span id="sel-pr" style="color:var(--green)"></span></h2>
+            <div class="grid cols-4">
+              <div class="field"><label>Supplier *</label><select id="b-supplier"></select></div>
+              <div class="field"><label>Unit Price *</label><input id="b-price" type="number" step="0.0001" min="0" placeholder="0.0000" /></div>
+              <div class="field"><label>Delivery Date (kaya ibigay) *</label><input id="b-date" type="date" /></div>
+              <div class="field end"><button class="btn" onclick="addBid()"><i class="fas fa-plus"></i> Add Bid</button></div>
+            </div>
+
+            <div class="table-wrap" style="margin-top:20px">
+              <table>
+                <thead><tr><th>Supplier</th><th>Unit Price</th><th>Delivery Date</th><th>Allocate Qty</th><th>Line Total</th><th></th></tr></thead>
+                <tbody id="bid-rows"></tbody>
+              </table>
+            </div>
+
+            <div class="alloc-summary" id="alloc-summary"></div>
+
+            <button class="btn" id="generate-btn" onclick="generatePOs()" disabled><i class="fas fa-scissors"></i> Generate Split POs</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3 -->
+      <div class="tab-panel" id="tab-pos">
+        <div class="card">
+          <h2><i class="fas fa-file-invoice"></i> Generated Purchase Orders <span class="hint" id="po-count"></span></h2>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>PO #</th><th>From Request</th><th>Supplier</th><th>Qty</th><th>Unit Price</th><th>Total</th><th>Delivery</th><th>Status</th></tr></thead>
+              <tbody id="po-rows"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const SAMPLE_REQUESTS = [
+      { id: 40, pr: "PR-2026-0010", mpn: "SBP100143WE5", category: "Components", quantity: 5000, currency: "PHP" },
+      { id: 19, pr: "PR-2026-0006", mpn: "ESDALC5-1BM2", category: "Spare Parts", quantity: 1200, currency: "USD" },
+      { id: 76, pr: "PR-2026-0014", mpn: "1N5819",       category: "Spare Parts", quantity: 1000, currency: "USD" },
+      { id: 21, pr: "PR-2026-0008", mpn: "BAV99-7-F",    category: "Components", quantity: 800,  currency: "USD" },
+    ];
+
+    const STORE_KEY = "ze_supplier_proto_v1";
+    const seed = () => ({
+      suppliers: [
+        { id: 1, name: "TechTrend Inc.",   contact: "Maria Santos", email: "sales@techtrend.com",     phone: "+63 917 111 2222", address: "Makati, PH", active: true },
+        { id: 2, name: "OptiTech Corp",    contact: "John Cruz",    email: "bids@optitech.com",        phone: "+63 928 333 4444", address: "Cebu, PH",   active: true },
+        { id: 3, name: "ElectroSupply Co", contact: "Liza Reyes",   email: "quote@electrosupply.com", phone: "+63 939 555 6666", address: "Taguig, PH", active: true },
+      ],
+      bids: {}, pos: [], seq: { supplier: 4, po: 1 }
+    });
+
+    let db = load();
+    function load() { try { const r = localStorage.getItem(STORE_KEY); if (r) return JSON.parse(r); } catch (e) {} return seed(); }
+    function save() { localStorage.setItem(STORE_KEY, JSON.stringify(db)); }
+    function resetDemo() { localStorage.removeItem(STORE_KEY); db = seed(); selectedReqId = null; document.getElementById("bidding-area").style.display = "none"; renderAll(); toast("Demo data reset"); }
+
+    let selectedReqId = null, toastTimer;
+    function toast(msg, isErr) { const t = document.getElementById("toast"); t.textContent = msg; t.className = "toast show" + (isErr ? " err" : ""); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.className = "toast", 2200); }
+
+    document.querySelectorAll(".tab-btn").forEach(btn => btn.addEventListener("click", () => {
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+      btn.classList.add("active"); document.getElementById("tab-" + btn.dataset.tab).classList.add("active");
+    }));
+
+    const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+    const money = (n, cur) => (cur === "USD" ? "$" : "₱") + Number(n).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const reqById = id => SAMPLE_REQUESTS.find(r => r.id === id);
+    const supById = id => db.suppliers.find(s => s.id === id);
+    const dash = () => "<span class='dash'>—</span>";
+
+    function addSupplier() {
+      const name = document.getElementById("s-name").value.trim();
+      if (!name) return toast("Supplier name is required", true);
+      db.suppliers.push({ id: db.seq.supplier++, name,
+        contact: document.getElementById("s-contact").value.trim(),
+        email: document.getElementById("s-email").value.trim(),
+        phone: document.getElementById("s-phone").value.trim(),
+        address: document.getElementById("s-address").value.trim(), active: true });
+      save();
+      ["s-name","s-contact","s-email","s-phone","s-address"].forEach(id => document.getElementById(id).value = "");
+      renderSuppliers(); renderSupplierSelect(); toast("Supplier added");
+    }
+    function toggleSupplier(id) { const s = supById(id); if (s) { s.active = !s.active; save(); renderSuppliers(); renderSupplierSelect(); } }
+    function deleteSupplier(id) { if (!confirm("Remove this supplier from the prototype?")) return; db.suppliers = db.suppliers.filter(s => s.id !== id); save(); renderSuppliers(); renderSupplierSelect(); toast("Supplier removed"); }
+
+    function renderSuppliers() {
+      const tb = document.getElementById("supplier-rows");
+      document.getElementById("s-count").textContent = db.suppliers.length + " total";
+      if (!db.suppliers.length) { tb.innerHTML = `<tr><td colspan="7" class="empty">No suppliers yet.</td></tr>`; return; }
+      tb.innerHTML = db.suppliers.map(s => `
+        <tr>
+          <td><strong>${esc(s.name)}</strong></td>
+          <td>${esc(s.contact) || dash()}</td>
+          <td>${esc(s.email) || dash()}</td>
+          <td>${esc(s.phone) || dash()}</td>
+          <td>${esc(s.address) || dash()}</td>
+          <td><span class="badge ${s.active ? "green" : "gray"}">${s.active ? "Active" : "Inactive"}</span></td>
+          <td><div class="row-actions">
+            <button class="icon-btn" title="Toggle active" onclick="toggleSupplier(${s.id})"><i class="fas fa-power-off"></i></button>
+            <button class="icon-btn danger" title="Remove" onclick="deleteSupplier(${s.id})"><i class="fas fa-trash"></i></button>
+          </div></td>
+        </tr>`).join("");
+    }
+
+    function renderSupplierSelect() {
+      const sel = document.getElementById("b-supplier");
+      const active = db.suppliers.filter(s => s.active);
+      sel.innerHTML = active.length ? active.map(s => `<option value="${s.id}">${esc(s.name)}</option>`).join("") : `<option value="">No active suppliers</option>`;
+    }
+
+    function renderRequests() {
+      document.getElementById("request-list").innerHTML = SAMPLE_REQUESTS.map(r => {
+        const bids = db.bids[r.id]?.length || 0;
+        return `<div class="req-item ${selectedReqId === r.id ? "selected" : ""}" onclick="selectRequest(${r.id})">
+          <div class="top"><span class="pr">${esc(r.pr)}</span><span class="chip">${r.quantity.toLocaleString()} units</span></div>
+          <div class="meta">${esc(r.mpn)} &middot; ${esc(r.category)} &middot; ${r.currency}${bids ? ` &middot; <span style="color:var(--yellow)">${bids} bid(s)</span>` : ""}</div>
+        </div>`;
+      }).join("");
+    }
+
+    function selectRequest(id) {
+      selectedReqId = id; if (!db.bids[id]) db.bids[id] = [];
+      document.getElementById("bidding-area").style.display = "block";
+      document.getElementById("sel-pr").textContent = reqById(id).pr;
+      renderRequests(); renderSupplierSelect(); renderBids();
+    }
+
+    function addBid() {
+      const r = reqById(selectedReqId); if (!r) return;
+      const supplierId = parseInt(document.getElementById("b-supplier").value);
+      const price = parseFloat(document.getElementById("b-price").value);
+      const date = document.getElementById("b-date").value;
+      if (!supplierId) return toast("Select a supplier", true);
+      if (!(price >= 0) || isNaN(price)) return toast("Enter a valid unit price", true);
+      if (!date) return toast("Pick a delivery date", true);
+      if (db.bids[selectedReqId].some(b => b.supplierId === supplierId)) return toast("That supplier already has a bid here", true);
+      db.bids[selectedReqId].push({ supplierId, price, date, alloc: 0 });
+      save();
+      document.getElementById("b-price").value = ""; document.getElementById("b-date").value = "";
+      renderBids(); renderRequests(); toast("Bid added");
+    }
+    function removeBid(id) { db.bids[selectedReqId] = db.bids[selectedReqId].filter(b => b.supplierId !== id); save(); renderBids(); renderRequests(); }
+    function setAlloc(id, v) { const b = db.bids[selectedReqId].find(x => x.supplierId === id); if (b) { b.alloc = Math.max(0, parseInt(v) || 0); save(); renderBids(); } }
+
+    function renderBids() {
+      const r = reqById(selectedReqId), bids = db.bids[selectedReqId] || [], tb = document.getElementById("bid-rows");
+      if (!bids.length) { tb.innerHTML = `<tr><td colspan="6" class="empty">No bids yet. Add a supplier bid above.</td></tr>`; }
+      else tb.innerHTML = bids.map(b => { const s = supById(b.supplierId); return `
+        <tr>
+          <td><strong>${esc(s ? s.name : "—")}</strong></td>
+          <td class="mono">${money(b.price, r.currency)}</td>
+          <td>${esc(b.date)}</td>
+          <td><input class="alloc-input mono" type="number" min="0" value="${b.alloc}" onchange="setAlloc(${b.supplierId}, this.value)" /></td>
+          <td class="mono">${money(b.price * b.alloc, r.currency)}</td>
+          <td><button class="icon-btn danger" onclick="removeBid(${b.supplierId})"><i class="fas fa-trash"></i></button></td>
+        </tr>`; }).join("");
+      renderAllocSummary();
+    }
+
+    function renderAllocSummary() {
+      const r = reqById(selectedReqId), bids = db.bids[selectedReqId] || [];
+      const allocated = bids.reduce((s, b) => s + (b.alloc || 0), 0);
+      const remaining = r.quantity - allocated;
+      const total = bids.reduce((s, b) => s + b.price * (b.alloc || 0), 0);
+      const valid = bids.length > 0 && allocated > 0 && remaining >= 0;
+      document.getElementById("alloc-summary").innerHTML = `
+        <div class="pill"><span>Required Qty</span><b>${r.quantity.toLocaleString()}</b></div>
+        <div class="pill"><span>Allocated</span><b>${allocated.toLocaleString()}</b></div>
+        <div class="pill ${remaining < 0 ? "bad" : "ok"}"><span>${remaining < 0 ? "Over by" : "Remaining"}</span><b>${Math.abs(remaining).toLocaleString()}</b></div>
+        <div class="pill"><span>Grand Total</span><b>${money(total, r.currency)}</b></div>`;
+      const btn = document.getElementById("generate-btn");
+      btn.disabled = !valid; btn.title = remaining < 0 ? "Allocated qty exceeds the request quantity" : "";
+    }
+
+    function generatePOs() {
+      const r = reqById(selectedReqId), bids = (db.bids[selectedReqId] || []).filter(b => b.alloc > 0);
+      if (!bids.length) return toast("Allocate quantities first", true);
+      if (bids.reduce((s, b) => s + b.alloc, 0) > r.quantity) return toast("Allocated qty exceeds the request", true);
+      const yr = new Date().getFullYear();
+      bids.forEach(b => { const s = supById(b.supplierId); db.pos.push({
+        poNo: `PO-${yr}-${String(db.seq.po++).padStart(4, "0")}`, pr: r.pr, supplier: s ? s.name : "—",
+        qty: b.alloc, price: b.price, total: b.price * b.alloc, currency: r.currency, delivery: b.date, status: "Issued" }); });
+      save(); renderPOs(); toast(`${bids.length} PO(s) generated`);
+      document.querySelector('.tab-btn[data-tab="pos"]').click();
+    }
+
+    function renderPOs() {
+      const tb = document.getElementById("po-rows");
+      document.getElementById("po-count").textContent = db.pos.length + " total";
+      if (!db.pos.length) { tb.innerHTML = `<tr><td colspan="8" class="empty">No POs generated yet.</td></tr>`; return; }
+      tb.innerHTML = db.pos.map(p => `
+        <tr>
+          <td><strong>${esc(p.poNo)}</strong></td>
+          <td>${esc(p.pr)}</td>
+          <td>${esc(p.supplier)}</td>
+          <td class="mono">${p.qty.toLocaleString()}</td>
+          <td class="mono">${money(p.price, p.currency)}</td>
+          <td class="mono">${money(p.total, p.currency)}</td>
+          <td>${esc(p.delivery)}</td>
+          <td><span class="badge blue">${esc(p.status)}</span></td>
+        </tr>`).join("");
+    }
+
+    function renderAll() { renderSuppliers(); renderSupplierSelect(); renderRequests(); renderPOs(); if (selectedReqId) renderBids(); }
+    renderAll();
+  </script>
+</body>
+</html>
